@@ -1,0 +1,8 @@
+---
+conda_prefix: /opt/conda
+conda_env_name: jupyter
+conda_update_base: false
+conda_env_wipe: false
+
+# If ran outside Morpheus, pass this variable explicitly when running the ansible playbook
+cert_email: "{{ morpheus.user.email | default('changeme@changeme.com') }}"

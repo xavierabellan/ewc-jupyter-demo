@@ -1,0 +1,49 @@
+---
+- name: Ensure jupyterhub present in conda environment
+  shell: |
+    source /etc/profile.d/conda.sh
+    conda activate {{ conda_env_name }}
+    conda install -c conda-forge jupyterhub jupyterlab -y
+  args:
+    executable: /bin/bash
+    creates: "{{ conda_prefix }}/envs/{{ conda_env_name }}/bin/jupyterhub"
+
+- name: Create Jupyterhub directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0750'
+  loop:
+    - /var/jupyterhub
+    - /etc/jupyterhub
+
+- name: Create jupyterhub config
+  shell: |
+    source /etc/profile.d/conda.sh
+    conda activate {{ conda_env_name }}
+    jupyterhub --generate-config -f /etc/jupyterhub/jupyterhub_config.py
+  args:
+    executable: /bin/bash
+    creates: /etc/jupyterhub/jupyterhub_config.py
+
+- name: Configure jupyterhub with HTTPS
+  blockinfile:
+    path: /etc/jupyterhub/jupyterhub_config.py
+    block: |
+      c.JupyterHub.bind_url = 'https://:443'
+      c.JupyterHub.ssl_key = '{{ ssl_key }}'
+      c.JupyterHub.ssl_cert = '{{ ssl_cert }}'
+
+- name: Create the systemd service for jupyterhub
+  template:
+    src: templates/jupyterhub.service.j2
+    dest: /etc/systemd/system/jupyterhub.service
+  notify:
+    - Reload daemons
+    - Restart jupyterhub
+
+- name: Ensure jupyter service is up and enabled
+  service:
+    name: jupyterhub
+    state: started
+    enabled: yes

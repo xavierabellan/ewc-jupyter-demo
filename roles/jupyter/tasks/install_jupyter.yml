@@ -1,0 +1,31 @@
+---
+- name: Wipe existing conda environment
+  file:
+    path: "{{ conda_prefix }}/envs/{{ conda_env_name }}"
+    state: absent
+  when: conda_env_wipe
+
+- name: Copy conda environment definition
+  template:
+    src: "environment.yml.j2"
+    dest: /tmp/environment.yml
+  register: conda_env_updated
+
+- name: Create conda environment
+  shell: |
+    source /etc/profile.d/conda.sh
+    source /etc/profile.d/mamba.sh
+    mamba env create -f /tmp/environment.yml && mamba clean --all -y
+  args:
+    executable: /bin/bash
+    creates: "{{ conda_prefix }}/envs/{{ conda_env_name }}"
+  register: conda_env_create
+
+- name: Update conda environment
+  shell: |
+    source /etc/profile.d/conda.sh
+    source /etc/profile.d/mamba.sh
+    mamba env update --prune -f /tmp/environment.yml && mamba clean --all -y
+  args:
+    executable: /bin/bash
+  when: not conda_env_create.changed and conda_env_updated.changed

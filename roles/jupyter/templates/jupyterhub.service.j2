@@ -1,0 +1,20 @@
+[Unit]
+Description=JupyterHub
+After=syslog.target network.target
+
+[Service]
+#TODO: probably have a dedicated user for this
+User=root
+Environment="PATH={{ conda_prefix }}/envs/{{ conda_env_name }}/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+Environment="SHELL=/bin/bash"
+WorkingDirectory=/var/jupyterhub
+ExecStart={{ conda_prefix }}/envs/{{ conda_env_name }}/bin/jupyterhub -f /etc/jupyterhub/jupyterhub_config.py
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=jupyterhub
+
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

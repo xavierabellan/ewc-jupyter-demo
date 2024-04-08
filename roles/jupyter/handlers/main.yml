@@ -1,0 +1,14 @@
+---
+- name: Restart jupyterhub
+  service:
+      name: jupyterhub
+      state: restarted
+
+- name: Restart firewalld
+  service:
+    name: firewalld
+    state: restarted
+
+- name: Reload daemons
+  systemd:
+      daemon_reload: yes

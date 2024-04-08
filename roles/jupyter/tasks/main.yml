@@ -1,0 +1,12 @@
+---
+- name: Install Conda
+  include_tasks: install_conda.yml
+
+- name: Install Jupyter in a conda environment
+  include_tasks: install_jupyter.yml
+
+- name: Install and configure certbot
+  include_tasks: install_certbot.yml
+
+- name: Setup Jupyter service
+  include_tasks: setup_jupyter.yml
