@@ -73,7 +73,7 @@
     ssl_key: "/etc/letsencrypt/live/{{ host_fqdn }}/privkey.pem"
     ssl_cert: "/etc/letsencrypt/live/{{ host_fqdn }}/fullchain.pem"
 
-- name: Setup Certbot to generate and renew SSL certificate
+- name: "Setup Certbot to generate and renew SSL certificate for {{ host_fqdn }} as {{ cert_email}}"
   command:
     cmd: /usr/bin/certbot certonly --standalone --noninteractive --agree-tos --email {{ cert_email }} -d {{ host_fqdn }} 
     creates: "{{ ssl_key }}"
