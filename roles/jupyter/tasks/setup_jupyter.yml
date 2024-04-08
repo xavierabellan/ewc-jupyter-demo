@@ -7,6 +7,9 @@
   args:
     executable: /bin/bash
     creates: "{{ conda_prefix }}/envs/{{ conda_env_name }}/bin/jupyterhub"
+  notify:
+    - Restart jupyterhub
+
 
 - name: Create Jupyterhub directories
   ansible.builtin.file:
@@ -33,6 +36,9 @@
       c.JupyterHub.bind_url = 'https://:443'
       c.JupyterHub.ssl_key = '{{ ssl_key }}'
       c.JupyterHub.ssl_cert = '{{ ssl_cert }}'
+      c.ConfigurableHTTPProxy.command = ['configurable-http-proxy', '--redirect-port', '80']
+  notify:
+    - Restart jupyterhub
 
 - name: Create the systemd service for jupyterhub
   template:
