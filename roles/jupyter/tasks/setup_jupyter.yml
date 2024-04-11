@@ -37,6 +37,7 @@
       c.JupyterHub.ssl_key = '{{ ssl_key }}'
       c.JupyterHub.ssl_cert = '{{ ssl_cert }}'
       c.ConfigurableHTTPProxy.command = ['configurable-http-proxy', '--redirect-port', '80']
+      c.Spawner.cmd = ['jupyterhub-singleuser', '--ContentsManager.allow_hidden=True']
   notify:
     - Restart jupyterhub
 
