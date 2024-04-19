@@ -1,2 +1,5 @@
 ansible.cfg
 inventory.ini
+.ipynb_checkpoints
+*.grib
+*.req
