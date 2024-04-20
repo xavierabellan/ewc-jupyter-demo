@@ -1,0 +1,7 @@
+---
+    - name: Update System
+      apt:
+        name: '*'
+        state: latest
+        autoremove: yes
+        update_cache: yes

@@ -1,0 +1,7 @@
+---
+    - name: Update System
+      dnf:
+        name: '*'
+        state: latest
+        autoremove: yes
+        update_cache: yes
