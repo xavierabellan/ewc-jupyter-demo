@@ -1,5 +1,5 @@
 ---
-    - name: Update System
+    - name: Update System - Rocky
       dnf:
         name: '*'
         state: latest
