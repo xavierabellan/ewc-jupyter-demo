@@ -1,0 +1,5 @@
+---
+- block:
+    - name: Update Operating System
+      include_tasks: update-{{ ansible_distribution | lower }}.yml
+  tags: update_os

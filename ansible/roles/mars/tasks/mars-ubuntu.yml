@@ -1,0 +1,24 @@
+---
+- name: Install MARS dependencies
+  package:
+    name:
+      - libgomp1
+      - libnetcdf-dev
+      - libblas3
+      - gpg-agent
+      - curl
+
+- name: "Fetch Nexus Repository's GPG keys for {{ ansible_distribution }} {{ ansible_distribution_release }}"
+  shell:
+    cmd: "curl {{ repo_base }}/repository/private-raw-repos-config/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}/stable/public-stable.gpg.key | gpg --dearmor > /usr/share/keyrings/nexus-private-{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}-stable.gpg"
+    creates: "/usr/share/keyrings/nexus-private-{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}-stable.gpg"
+    
+- name: "Add Nexus Repository for {{ ansible_distribution }} {{ ansible_distribution_release }}"
+  shell:
+    cmd: "echo 'deb [signed-by=/usr/share/keyrings/nexus-private-{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}-stable.gpg] {{ repo_base }}/repository/private-{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}-stable/ {{ ansible_distribution_release | lower }} main' > /etc/apt/sources.list.d/nexus-private-{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}-stable.list"
+    creates: "/etc/apt/sources.list.d/nexus-private-{{ ansible_distribution | lower }}-{{ ansible_distribution_release | lower }}-stable.list"
+
+- name: "Install Mars client"
+  apt:
+    name: mars-client-cloud
+    update_cache: yes
