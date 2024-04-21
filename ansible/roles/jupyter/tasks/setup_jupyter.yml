@@ -54,3 +54,7 @@
     name: jupyterhub
     state: started
     enabled: yes
+
+- name: Print Jupyter URL
+  debug:
+    msg: "Jupyter ready at https://{{ host_fqdn }}"
