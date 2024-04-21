@@ -1,16 +1,4 @@
 ---
-- name: Ensure jupyterhub present in conda environment
-  shell: |
-    source /etc/profile.d/conda.sh
-    conda activate {{ conda_env_name }}
-    conda install -c conda-forge jupyterhub jupyterlab -y
-  args:
-    executable: /bin/bash
-    creates: "{{ conda_prefix }}/envs/{{ conda_env_name }}/bin/jupyterhub"
-  notify:
-    - Restart jupyterhub
-
-
 - name: Create Jupyterhub directories
   ansible.builtin.file:
     path: "{{ item }}"
