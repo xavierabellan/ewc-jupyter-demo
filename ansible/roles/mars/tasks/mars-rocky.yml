@@ -1,0 +1,51 @@
+---
+- name: Ensure EPEL repo is enabled
+  yum:
+    name: epel-release
+    state: latest
+- name: Enable CRB for RHEL-based 9+ platforms
+  block:
+    - name: Check if CRB is enabled
+      command:
+        cmd: dnf repolist crb --enabled
+      register: repolist
+      changed_when: false
+        
+    - name: enable CRB repository
+      command:
+        cmd: dnf config-manager --enable crb
+      when: "'crb' not in repolist.stdout"
+  when: "{{ ansible_distribution_major_version | int }} > 8"
+
+- name: enable PowerTools for RHEL 8
+  dnf_repository:
+    name: powertools
+    state: present
+  when: "{{ ansible_distribution_major_version | int }} == 8"
+
+- name: Add ECMWF repository
+  dnf_repository:
+    name: ecmwf
+    description: ECMWF Repository
+    baseurl: "{{ repo_base }}/repository/private-rocky-stable/{{ ansible_distribution_major_version }}/{{ ansible_distribution_minor_version }}/rpms"
+    gpgcheck: yes
+    enabled: yes
+
+- name: Trust the traffic coming from the ECMWF LAN in the local firewall
+  block:
+    - name: Add source to trusted zone
+      firewalld:
+        zone: trusted
+        source: 10.0.0.0/8
+        state: enabled
+        permanent: yes
+
+    - name: Reload firewall
+      firewalld:
+        state: reloaded
+
+- name: "Install MARS client"
+  dnf:
+    name: mars-client-cloud
+    disable_gpg_check: yes
+    state: latest

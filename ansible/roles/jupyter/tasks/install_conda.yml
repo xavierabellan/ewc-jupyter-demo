@@ -7,18 +7,18 @@
 - block:
     - name: Download conda installer
       get_url:
-        url: "{{ conda_installer}}"
-        dest: /tmp/miniconda.sh
+        url: "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
+        dest: /tmp/miniforge3.sh
         mode: 0755
 
     - name: Install conda
       command:
-        cmd: /tmp/miniconda.sh -b -p {{ conda_prefix }}
+        cmd: /tmp/miniforge3.sh -b -p {{ conda_prefix }}
         creates: "{{ conda_prefix }}/bin/conda"
 
     - name: Remove conda installer
       file:
-        path: /tmp/miniconda.sh
+        path: /tmp/miniforge3.sh
         state: absent
   when: not conda_exe.stat.exists
 

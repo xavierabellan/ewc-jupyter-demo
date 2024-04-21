@@ -4,3 +4,4 @@ inventory.ini
 *.grib
 *.nc
 *.req
+.DS_Store

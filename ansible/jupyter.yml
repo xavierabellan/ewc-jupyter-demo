@@ -2,21 +2,7 @@
 - hosts: all
   become: yes
   gather_facts: true
-  pre_tasks:
-    - name: Update APT cache
-      apt:
-        update_cache: yes
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
-    - name: Update system
-      package:
-        name: '*'
-        state: latest
-
-    - name: Autoremove unneeded packages installed as dependencies
-      ansible.builtin.dnf:
-        autoremove: yes
-      when: ansible_os_family == "RedHat"
-
   roles:
+    - update
+    - mars
     - jupyter
