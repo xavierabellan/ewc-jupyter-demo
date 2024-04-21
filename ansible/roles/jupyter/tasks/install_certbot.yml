@@ -75,5 +75,5 @@
 
 - name: "Setup Certbot to generate and renew SSL certificate for {{ host_fqdn }} as {{ cert_email}}"
   command:
-    cmd: /usr/bin/certbot certonly --standalone --noninteractive --agree-tos --email {{ cert_email }} -d {{ host_fqdn }} 
+    cmd: /usr/bin/certbot certonly{{ ' --test-cert ' if test_cert else ' ' }}--standalone --noninteractive --agree-tos --email {{ cert_email }} -d {{ host_fqdn }} 
     creates: "{{ ssl_key }}"
