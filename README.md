@@ -11,7 +11,7 @@ The instance requires a public IP and DNS name, and will expose the JupyterHub t
 The playbook can be run standalone, defining your email address for the creation of the certificate:
     
     cd ansible
-    ansible-plabook -e cert_email=your.email@domain.org jupyter.yml
+    ansible-playbook -e cert_email=your.email@domain.org jupyter.yml
 
 or integrated within your EWC Morpheus portal via Library - Integrations. In that case the email for the certificate will be taken from your own tenancy account.
 
