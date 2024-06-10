@@ -1,9 +1,15 @@
 ---
 - name: OTP support
   block:
-    - name: Install libpam-google-authenticator
+    - name: Install libpam-google-authenticator (Debian)
       package:
         name: libpam-google-authenticator
+      when: ansible_os_family == "Debian"
+    
+    - name: Install google authenticator (RHEL)
+      package:
+        name: google-authenticator
+      when: ansible_os_family == "RedHat"
 
     - name: Jupyterhub PAM module
       blockinfile:
