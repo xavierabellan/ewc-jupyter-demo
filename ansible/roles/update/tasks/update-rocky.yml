@@ -3,7 +3,6 @@
   dnf:
     name: '*'
     state: latest
-    autoremove: yes
     update_cache: yes
 
 - name: Install basic admin tools
