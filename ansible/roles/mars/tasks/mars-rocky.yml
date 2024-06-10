@@ -39,10 +39,7 @@
         source: 10.0.0.0/8
         state: enabled
         permanent: yes
-
-    - name: Reload firewall
-      firewalld:
-        state: reloaded
+        immediate: yes
 
 - name: "Install MARS client"
   dnf:
