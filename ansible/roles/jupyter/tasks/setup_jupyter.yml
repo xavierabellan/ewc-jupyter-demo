@@ -26,6 +26,11 @@
       c.JupyterHub.ssl_cert = '{{ ssl_cert }}'
       c.ConfigurableHTTPProxy.command = ['configurable-http-proxy', '--redirect-port', '80']
       c.Spawner.cmd = ['jupyterhub-singleuser', '--ContentsManager.allow_hidden=True']
+      {% if morpheus is defined %}
+      c.Authenticator.allowed_users = {'{{ morpheus.user.linuxUsername }}'}
+      {% else %}
+      c.Authenticator.allow_all = True
+      {% endif %}
   notify:
     - Restart jupyterhub
 
