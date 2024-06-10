@@ -19,6 +19,19 @@
 
   when: ansible_os_family == "RedHat"
 
+- name: Setup HTTP(S) firewall rules for RHEL-based platforms
+  block:
+    - name: "Allow traffic in default firewall zone for {{ item }}"
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        permanent: true
+        immediate: true
+        state: enabled
+      loop:
+        - http
+        - https
+  when: ansible_os_family == "RedHat"
+
 - name: Ensure snap is installed
   package:
     name: snapd
