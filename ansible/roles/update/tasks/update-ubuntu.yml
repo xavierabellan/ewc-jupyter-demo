@@ -1,7 +1,23 @@
 ---
-    - name: Update System - Ubuntu
-      apt:
-        name: '*'
-        state: latest
-        autoremove: yes
-        update_cache: yes
+- name: Disable os_prober in grub to avoid update timeouts
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_DISABLE_OS_PROBER='
+    line: 'GRUB_DISABLE_OS_PROBER=true'
+    create: yes
+
+- name: Update System - Ubuntu
+  apt:
+    name: '*'
+    state: latest
+    autoremove: yes
+    update_cache: yes
+
+- name: Check if reboot is required after update
+  stat:
+    path: /var/run/reboot-required
+  register: reboot_required_file
+
+- name: Reboot after update
+  reboot:
+  when: reboot_required_file.stat.exists == true
