@@ -1,7 +1,24 @@
 ---
-    - name: Update System - Rocky
-      dnf:
-        name: '*'
-        state: latest
-        autoremove: yes
-        update_cache: yes
+- name: Update System - Rocky
+  dnf:
+    name: '*'
+    state: latest
+    autoremove: yes
+    update_cache: yes
+
+- name: Install basic admin tools
+  dnf:
+    name: yum-utils
+    state: latest
+
+- name: Check if reboot is required after update
+  shell:
+    cmd: "needs-restarting -r"
+  changed_when: false
+  failed_when: reboot_required.rc != 0 and reboot_required.rc != 1
+  check_mode: false
+  register: reboot_required
+
+- name: Reboot after update
+  reboot:
+  when: reboot_required.rc == 1
