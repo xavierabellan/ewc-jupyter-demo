@@ -7,3 +7,6 @@ conda_env_wipe: false
 # If ran outside Morpheus, pass this variable explicitly when running the ansible playbook
 cert_email: "{{ morpheus.user.email | default('changeme@changeme.com') }}"
 test_cert: false
+
+# Enable OTP support
+with_otp: false

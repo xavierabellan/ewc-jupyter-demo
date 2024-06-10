@@ -1,4 +1,21 @@
 ---
+- name: OTP support
+  block:
+    - name: Install libpam-google-authenticator
+      package:
+        name: libpam-google-authenticator
+
+    - name: Jupyterhub PAM module
+      blockinfile:
+        path: /etc/pam.d/jupyterhub
+        block: |
+          @include login
+          # Require OTP when user has it configured
+          auth required pam_google_authenticator.so nullok
+      notify:
+        - Restart jupyterhub
+  when: with_otp
+
 - name: Create Jupyterhub directories
   ansible.builtin.file:
     path: "{{ item }}"
@@ -30,6 +47,10 @@
       c.Authenticator.allowed_users = {'{{ morpheus.user.linuxUsername }}'}
       {% else %}
       c.Authenticator.allow_all = True
+      {% endif %}
+      {% if with_otp %}
+      c.Authenticator.request_otp = True
+      c.PAMAuthenticator.service = 'jupyterhub'
       {% endif %}
   notify:
     - Restart jupyterhub
