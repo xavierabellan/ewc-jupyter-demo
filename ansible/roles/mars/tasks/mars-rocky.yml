@@ -27,7 +27,7 @@
   yum_repository:
     name: ecmwf
     description: ECMWF Repository
-    baseurl: "{{ repo_base }}/repository/private-rocky-stable/{{ ansible_distribution_major_version }}/{{ ansible_distribution_minor_version }}/rpms"
+    baseurl: "{{ repo_base }}/repository/private-rocky-stable/$releasever/rpms"
     gpgcheck: yes
     enabled: yes
 
