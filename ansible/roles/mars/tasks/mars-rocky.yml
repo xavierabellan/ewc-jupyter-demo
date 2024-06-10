@@ -15,13 +15,13 @@
       command:
         cmd: dnf config-manager --enable crb
       when: "'crb' not in repolist.stdout"
-  when: "{{ ansible_distribution_major_version | int }} > 8"
+  when: ansible_distribution_major_version|int > 8
 
 - name: enable PowerTools for RHEL 8
   yum_repository:
     name: powertools
     state: present
-  when: "{{ ansible_distribution_major_version | int }} == 8"
+  when: ansible_distribution_major_version|int == 8
 
 - name: Add ECMWF repository
   yum_repository:
