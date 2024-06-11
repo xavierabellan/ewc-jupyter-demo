@@ -1,0 +1,15 @@
+---
+- name: Install Google Authenticator
+  package:
+    name: libpam-google-authenticator
+
+- name: Jupyterhub PAM module
+  blockinfile:
+    path: /etc/pam.d/jupyterhub
+    block: |
+      @include login
+      # Require OTP when user has it configured
+      auth required pam_google_authenticator.so nullok
+    create: yes
+  notify:
+    - Restart jupyterhub

@@ -1,26 +1,6 @@
 ---
 - name: OTP support
-  block:
-    - name: Install libpam-google-authenticator (Debian)
-      package:
-        name: libpam-google-authenticator
-      when: ansible_os_family == "Debian"
-    
-    - name: Install google authenticator (RHEL)
-      package:
-        name: google-authenticator
-      when: ansible_os_family == "RedHat"
-
-    - name: Jupyterhub PAM module
-      blockinfile:
-        path: /etc/pam.d/jupyterhub
-        block: |
-          @include login
-          # Require OTP when user has it configured
-          auth required pam_google_authenticator.so nullok
-        create: yes
-      notify:
-        - Restart jupyterhub
+  include_tasks: otp_{{ ansible_distribution | lower }}.yml
   when: with_otp
 
 - name: Create Jupyterhub directories
