@@ -11,5 +11,3 @@
       # Require OTP when user has it configured
       auth required pam_google_authenticator.so nullok
     create: yes
-  notify:
-    - Restart jupyterhub

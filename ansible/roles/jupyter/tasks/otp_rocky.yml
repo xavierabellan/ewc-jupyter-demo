@@ -26,5 +26,3 @@
       session    include      postlogin
       -session   optional     pam_ck_connector.so
     create: yes
-  notify:
-    - Restart jupyterhub
